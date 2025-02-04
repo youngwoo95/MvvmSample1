@@ -1,0 +1,23 @@
+﻿<Window x:Class="WPFMVVMSample1.Views.PopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFMVVMSample1.Views"
+        mc:Ignorable="d"
+        Title="PopupWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!-- 팝업에 표시할 메시지 -->
+            <TextBlock Text="이 버튼을 클릭하면 화면이 닫힙니다."
+                       HorizontalAlignment="Center"
+                       Margin="10"
+                       FontSize="15"/>
+            <!-- OK 버튼 클릭 시 창을 닫습니다. -->
+            <Button Content="OK"
+                    Width="75"
+                    HorizontalAlignment="Center"
+                    Click="Button_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
