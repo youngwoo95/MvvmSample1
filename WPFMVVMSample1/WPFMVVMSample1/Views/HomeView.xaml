@@ -5,12 +5,74 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPFMVVMSample1.Views"
              mc:Ignorable="d" 
+             xmlns:vm="clr-namespace:WPFMVVMSample1.ViewModels"
              d:Background="White"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Transparent">
-        <TextBlock Text="{Binding Message}"
-                      FontSize="24"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"/>
+
+    <!-- 뷰모델을 DataContext로 설정 -->
+    <UserControl.DataContext>
+        <vm:HomeViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 할 일 목록과 커맨드 버튼 영역 -->
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Todo Items" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+            <ListBox ItemsSource="{Binding TodoItems}" 
+                 SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                 DisplayMemberPath="Title"
+                 Height="300"/>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Button Content="Add" Command="{Binding AddCommand}" Width="75" Margin="5"/>
+                <Button Content="Delete" Command="{Binding DeleteCommand}" Width="75" Margin="5"/>
+                <Button Content="Mark Complete" Command="{Binding MarkCompleteCommand}" Width="100" Margin="5"/>
+                <Button Content="Edit" Command="{Binding EditCommand}" Width="75" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 편집 영역 -->
+        <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="10">
+            <StackPanel>
+                <TextBlock Text="Edit Todo Item" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                <!-- EditingItem이 있으면 해당 데이터를 편집 -->
+                <StackPanel DataContext="{Binding EditingItem}">
+                    
+                    <TextBlock Text="Title:"/>
+                    <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Description:"/>
+                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Due Date:"/>
+                    <DatePicker SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <CheckBox Content="Completed" IsChecked="{Binding IsCompleted}" Margin="0,0,0,10"/>
+                    
+                    <!-- 방법 1 -->
+                    <!--
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Save" Command="{Binding DataContext.SaveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="75" Margin="5"/>
+                        <Button Content="Cancel" Command="{Binding DataContext.CancelCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Width="75" Margin="5"/>
+                    </StackPanel>
+                    -->
+
+                    <!-- 방법 1 선호됨 -->
+                    <StackPanel Orientation="Horizontal" DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext}">
+                        <Button Content="Save" Command="{Binding SaveCommand}" Width="75" Margin="5"/>
+                        <Button Content="Cancel" Command="{Binding CancelCommand}" Width="75" Margin="5"/>
+                    </StackPanel>
+                    
+                    <!--
+                    <StackPanel Orientation="Horizontal">
+                        편집 영역 내부 DataContext는 EditingItem이므로, 명령은 윈도우의 DataContext(MainViewModel)를 참조 
+                        <Button Content="Save" Command="{Binding DataContext.SaveCommand, RelativeSource={RelativeSource AncestorType=Window}}" Width="75" Margin="5"/>
+                        <Button Content="Cancel" Command="{Binding DataContext.CancelCommand, RelativeSource={RelativeSource AncestorType=Window}}" Width="75" Margin="5"/>
+                    </StackPanel>
+                    -->
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
